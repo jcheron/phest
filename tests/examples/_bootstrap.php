@@ -3,6 +3,11 @@ use Mocks\Examples\User;
 use Ovide\Libs\Mvc\Rest\App;
 use Phalcon\Acl;
 
+$appClass = new ReflectionClass(App::class);
+$appProp  = $appClass->getProperty('app');
+$appProp->setAccessible(true);
+$appProp->setValue(null, null);
+
 $app = App::instance();
 
 $app->addResource(User::PATH, User::class, User::RX);
@@ -28,6 +33,8 @@ $app->di->set('acl', function() {
 	$acl->isAllowed('guest', '', '');
 	return $acl;
 }, true);
+
+$app->addHeaderHandler(Ovide\Libs\Mvc\Rest\Header\Handler\Etag::class);
 
 $app->before(function() use($app){
 	/* @var $acl Acl\Adapter\Memory */

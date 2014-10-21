@@ -128,23 +128,20 @@ class App extends Micro
     public static function addHeaderHandler($headerHandler)
     {
         if (is_subclass_of($headerHandler, Header\Handler::class)) {
+            $app     = self::$app;
             $handler = new $headerHandler(self::$app->request);
-            self::$app->before(function () use ($handler) {
-                $handler->init();
-                if ($handler->get()) {
+            self::$app->before(function () use ($handler, $app) {
+                if ($handler->init()) {
                     $handler->before();
                 }
             });
             self::$app->after(function () use ($handler) {
-                if ($handler->get()) {
-                    $handler->after();
-                }
+                $handler->after();
             });
             self::$app->finish(function () use ($handler) {
-                if ($handler->get()) {
-                    $handler->finish();
-                }
-            });
+                $handler->finish();
+            }); 
+
         } else {
             $msg = "$headerHandler is not a ".Header\Handler::class;
             throw new \LogicException($msg);

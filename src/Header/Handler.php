@@ -13,6 +13,10 @@ abstract class Handler implements HandlerInterface
      */
     protected $_content;
 
+    /**
+     * The presence of this header acts as a conditional for the handler
+     * Leave empty if there's no precondition
+     */
     const HEADER = '';
 
     public function __construct(\Phalcon\Http\RequestInterface $r)
@@ -30,13 +34,18 @@ abstract class Handler implements HandlerInterface
         return App::instance()->getConfig(static::HEADER, $key);
     }
 
+    /**
+     * Checks if the header must be present in the request
+     * 
+     * @return boolean
+     */
     public function init()
     {
-        if (!static::HEADER) {
-            $msg = get_class()." constant 'HEADER' is not defined";
-            throw new \LogicException($msg);
+        if (!static::HEADER || $this->_request->has(static::HEADER)) {
+            $this->_content = $this->_request->getHeader(static::HEADER);
+            return true;
         }
-        $this->_content = $this->_request->getHeader(static::HEADER);
+        return false;
     }
 
     public function get()

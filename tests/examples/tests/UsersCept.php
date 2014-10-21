@@ -1,7 +1,7 @@
 <?php use Ovide\Libs\Mvc\Tester;
 
 $I = new Tester($scenario);
-$I->wantTo('Do some CRUD operations with users');
+$I->wantTo('do some CRUD operations with users');
 
 $foo = [
 	'username' => 'foo',
@@ -62,7 +62,8 @@ $bar['uri'] = $I->grabHttpHeader('Location');
 $I->amGoingTo('request user $foo at '.$foo['uri']);
 $I->sendGet($foo['uri']);
 $I->seeResponseCodeIs(200);
-
+$I->seeHttpHeader('ETag');
+$ETag['users'] = $I->grabHttpHeader('ETag');
 $I->seeResponseEquals(json_encode([
 	'username' => $foo['username'],
 	'uri'      => "/users/{$foo['username']}",
