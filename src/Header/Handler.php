@@ -41,15 +41,10 @@ abstract class Handler implements HandlerInterface
      */
     public function init()
     {
-        if (!static::HEADER || $this->_request->has(static::HEADER)) {
+        if (!static::HEADER || isset($_SERVER[static::HEADER])) {
             $this->_content = $this->_request->getHeader(static::HEADER);
             return true;
         }
         return false;
-    }
-
-    public function get()
-    {
-        return $this->_content;
     }
 }

@@ -76,10 +76,16 @@ abstract class Controller extends \Phalcon\Mvc\Controller
                     'message' => $message,
                     'code'    => $code,
                 ];
-            $this->response = new Response($msg, $code, $message);
+            $this->response($msg, $code, $message);            
         }
 
         return $this->response;
+    }
+    
+    protected function response($content=null, $code=null, $message=null)
+    {
+        $this->response       = 
+        $this->di['response'] = new Response($content, $code, $message);
     }
 
     /**
@@ -121,7 +127,7 @@ abstract class Controller extends \Phalcon\Mvc\Controller
                 $this->options();
                 break;
             default:
-                $this->response = new Response(null, Response::NOT_ALLOWED);
+                $this->response(null, Response::NOT_ALLOWED);
         }
     }
 
@@ -165,7 +171,7 @@ abstract class Controller extends \Phalcon\Mvc\Controller
         sort($options);
 
         $list = implode(', ', $options);
-        $this->response = new Response('', Response::OK);
+        $this->response('', Response::OK);
         $this->response->setHeader('Allow', $list);
     }
     
@@ -208,10 +214,20 @@ abstract class Controller extends \Phalcon\Mvc\Controller
             }
         }
         
-        $this->response = new Response($rsp, $code, $status);
+        $this->response($rsp, $code, $status);
 
         if ($location !== null) {
             $this->response->setHeader('Location', $location);
         }
+    }
+    
+    public function getSelf()
+    {
+        return $this;
+    }
+    
+    public function getResponse()
+    {
+        return $this->response;
     }
 }

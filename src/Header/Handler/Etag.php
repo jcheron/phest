@@ -1,26 +1,31 @@
 <?php namespace Ovide\Libs\Mvc\Rest\Header\Handler;
 
-use Ovide\Libs\Mvc\Rest\Header;
+use Ovide\Libs\Mvc\Rest;
 
-class Etag extends Header\Handler
+class Etag extends Rest\Header\Handler
 {
-    const HEADER = 'IF_NONE_MATCH';
+    const HEADER = 'HTTP_IF_NONE_MATCH';
     
-    public function after()
+    public function after(Rest\Response $response)
     {
-        $response = \Ovide\Libs\Mvc\Rest\App::instance()->di->get('response');
-        $content = $response->getContent();
+        $etag = md5($response->getContent());
+        $response->setEtag($etag);
+        if ($etag == $this->_content) {
+            $response->setContent('');
+            $response->setStatusCode(
+                Rest\Response::NOT_MODIFIED,
+                Rest\Response::$status[Rest\Response::NOT_MODIFIED]
+            );
+        }
     }
 
     public function before()
     {
-        $value = $this->get();
+        
     }
 
     public function finish()
     {
         
     }
-
-//put your code here
 }

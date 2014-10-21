@@ -21,7 +21,7 @@ class Basic extends Rest\Header\Handler
         self::$_handleCalled++;
     }
 
-    public function after() {
+    public function after(Rest\Response $response) {
         
     }
 

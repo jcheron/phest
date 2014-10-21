@@ -41,7 +41,8 @@ class App extends Micro
             parent::__construct($dependencyInjector);
             self::$app = $this;
             $app = self::$app;
-
+            $this->response = $dependencyInjector->getResponse();
+            $r = $this->response->setContent('bla');;
             $app->_notFoundHandler = function () use ($app) {
                 $app->response->notFound();
 
@@ -132,14 +133,16 @@ class App extends Micro
             $handler = new $headerHandler(self::$app->request);
             self::$app->before(function () use ($handler, $app) {
                 if ($handler->init()) {
-                    $handler->before();
+                    $handler->before($app->_activeHandler[0]);
                 }
             });
-            self::$app->after(function () use ($handler) {
-                $handler->after();
+            self::$app->after(function () use ($handler, $app) {
+                //$handler->after($app->_activeHandler[0]);
+                $app->response = $app->di->getResponse();
+                $handler->after($app->response);
             });
-            self::$app->finish(function () use ($handler) {
-                $handler->finish();
+            self::$app->finish(function () use ($handler, $app) {
+                $handler->finish($app->_activeHandler[0]);
             }); 
 
         } else {
