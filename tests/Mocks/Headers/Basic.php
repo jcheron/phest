@@ -12,8 +12,8 @@ class Basic extends Rest\Header\Handler
     
     public function init()
     {
-        parent::init();
         self::$_initCalled++;
+        return parent::init();
     }
     
     public function before()
