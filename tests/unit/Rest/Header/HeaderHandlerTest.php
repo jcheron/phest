@@ -18,21 +18,6 @@ class HeaderHandlerTest extends \Codeception\TestCase\Test
     }
 
     // tests
-    public function testThrowException()
-    {
-        $I = $this->tester;
-
-        $request  = new \Phalcon\Http\Request();
-        $header = new \Mocks\Headers\InvalidRequestHeader($request);
-
-        try {
-            $header->init();
-            $I->assertTrue(false);
-        } catch (\LogicException $ex) {
-            $I->assertTrue(true);
-        }
-    }
-
     public function testGet()
     {
         $I = $this->tester;
