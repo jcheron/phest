@@ -76,6 +76,7 @@ $I->amGoingTo('request user $foo using its ETag');
 $I->haveHttpHeader('If-None-Match', $foo['etag']);
 $I->sendGET($foo['uri']);
 $I->seeResponseCodeIs(304);
+$I->seeResponseEquals('');
 
 ///////////////////////////////
 $I->amGoingTo('request all users');
