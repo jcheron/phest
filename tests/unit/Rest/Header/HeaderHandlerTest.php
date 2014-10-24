@@ -18,19 +18,6 @@ class HeaderHandlerTest extends \Codeception\TestCase\Test
     }
 
     // tests
-    public function testGet()
-    {
-        $I = $this->tester;
-
-        $_SERVER[Mocks\Headers\Basic::HEADER] = 'var';
-
-        $request  = new \Phalcon\Http\Request();
-
-        $header = new Mocks\Headers\Basic($request);
-        $header->init();
-        $I->assertEquals('var', $header->get());
-    }
-
     public function testSetConfig()
     {
         $I = $this->tester;
