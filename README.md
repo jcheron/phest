@@ -147,6 +147,7 @@ public function post($fooObj)
   - Cache-Control
   - Connection
   - Date
+  - Expect: 100-Continue
 
 - Add more options to the router
 - Add HEAD and PATCH verbs
