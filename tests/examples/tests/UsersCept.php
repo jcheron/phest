@@ -62,22 +62,12 @@ $bar['uri'] = $I->grabHttpHeader('Location');
 $I->amGoingTo('request user $foo at '.$foo['uri']);
 $I->sendGET($foo['uri']);
 $I->seeResponseCodeIs(200);
-$I->seeHttpHeader('ETag');
-$foo['etag'] = $I->grabHttpHeader('ETag');
 $I->seeResponseEquals(json_encode([
 	'username' => $foo['username'],
 	'uri'      => "/users/{$foo['username']}",
 	'articles' => "/users/{$foo['username']}/articles"
 ]));
         
-///////////////////////////////
-$I->amGoingTo('request user $foo using its ETag');
-
-$I->haveHttpHeader('If-None-Match', $foo['etag']);
-$I->sendGET($foo['uri']);
-$I->seeResponseCodeIs(304);
-$I->seeResponseEquals('');
-
 ///////////////////////////////
 $I->amGoingTo('request all users');
 $I->sendGet('/users');
