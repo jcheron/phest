@@ -141,8 +141,12 @@ public function post($fooObj)
 ###Next
 
 - Add header handlers:
-  - Content-Type / Accept
-  - ETag / If-None-Match
+  - Content-* / Accept-*
+  - Allow
+  - Authorization
+  - Cache-Control
+  - Connection
+  - Date
 
 - Add more options to the router
 - Add HEAD and PATCH verbs
