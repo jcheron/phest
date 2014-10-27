@@ -40,9 +40,38 @@ $app->di->setShared('acl', function() {
 
 $app->before(function() use($app){
 	/* @var $acl Acl\Adapter\Memory */
-	$acl = $app->di->getShared('acl');
+	$acl    = $app->di->getAcl();
+        $route = $_SERVER['REQUEST_URI'];
+        $method = strtolower($app->request->getMethod());
+        $auth   = new stdClass();
+        
+        if (isset($_SERVER['PHP_AUTH_USER'])) {
+            $user = $_SERVER['PHP_AUTH_USER'];
+            $pass = $_SERVER['PHP_AUTH_PW'];
+            if (isset(User::$data[$user]['password']) &&
+                sha1($pass) === User::$data[$user]['password']) {
+
+                if (!$acl->isAllowed($user, $route, $method)) {
+                    $app->response->setStatusCode(403, 'Forbidden');
+                    return false;
+                }
+            } else {
+                $app->response->setStatusCode(401, 'Unauthorized');
+                $app->response->setHeader('WWW-Authenticate', 'Basic');
+                $app->response->send();
+                return false;
+            }
+        } else {
+            $user = 'guest';
+            if (!$acl->isAllowed($user, $route, $method)) {
+                $app->response->setStatusCode(401, 'Unauthorized');
+                $app->response->setHeader('WWW-Authenticate', 'Basic');
+                return false;
+            }
+        }
+        $auth->user = $user;
+        $this->di->setShared('auth', $auth);
+        return true;
 });
-
-
 
 return $app;
