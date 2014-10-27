@@ -41,8 +41,6 @@ class App extends Micro
             parent::__construct($dependencyInjector);
             self::$app = $this;
             $app = self::$app;
-            $this->response = $dependencyInjector->getResponse();
-            $r = $this->response->setContent('bla');;
             $app->_notFoundHandler = function () use ($app) {
                 $app->response->notFound();
 
