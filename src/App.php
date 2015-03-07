@@ -117,12 +117,15 @@ class App extends Micro
      */
     public function mountResource($controller)
     {
+    	$path=$controller::PATH;
+    	if($path==="")
+    		$path="/".strtolower($controller);
         $rx  = $controller::RX;
         $col = new Collection();
         $col->setHandler($controller, true);
-        $col->setPrefix($controller::PATH);
-        $col->map("[/]?{id:$}", 'handle', $controller::PATH);
-        $col->map("/{id:$rx}[/]?", 'handle', $controller::PATH);
+        $col->setPrefix($path);
+        $col->map("[/]?{id:$}", 'handle', $path);
+        $col->map("/{id:$rx}[/]?", 'handle', $path);
         $this->mount($col);
     }
 

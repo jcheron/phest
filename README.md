@@ -29,14 +29,31 @@ use Ovide\Libs\Mvc\Rest\App;
 
 require __DIR__.'/../vendor/autoload.php';
 
+$loader = new \Phalcon\Loader();
+//Register dirs [Optional]
+$loader->registerDirs(
+		array(
+			"./../app/controllers",
+			"./../app/models"
+		)
+)->register();
+
 $app = App::instance();
 
-$app->addResources([
-    'myresource/path'             => MyResource::class,
-    'myresource/path/subresource' => SubResource::class,
-    'users'                       => User::class
-    'users/{userID}/comments'     => Comment::class
-]);
+//Set up the database service
+$app->di->set('db', function(){
+	return new \Phalcon\Db\Adapter\Pdo\Mysql(array(
+			"host" => "localhost",
+			"username" => "me",
+			"password" => "",
+			"dbname" => "MyDB",
+			"options" => array(
+					PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8' //UTF-8 is important for PHP JSON Encoding
+			)
+	));
+});
+
+$app->addResources([MyController::class,otherController::class]);
 
 $app->handle();
 ```
@@ -48,7 +65,7 @@ $app->handle();
 
 use Ovide\Libs\Mvc\Rest
 
-class User extends Rest\Controller
+class MyController extends Rest\Controller
 {
     public function get()
     {
