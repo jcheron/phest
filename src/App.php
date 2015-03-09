@@ -125,6 +125,7 @@ class App extends Micro
         $col->setHandler($controller, true);
         $col->setPrefix($path);
         $col->map("[/]?{id:$}", 'handle', $path);
+        $col->map("/{subResource}/{id:$rx}[/]?", 'handle', $path);
         $col->map("/{id:$rx}[/]?", 'handle', $path);
         $this->mount($col);
     }

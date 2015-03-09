@@ -132,7 +132,11 @@ abstract class Controller extends \Phalcon\Mvc\Controller
                 if ($id === '') {
                     $this->_curMethod = 'get';
                     $this->_method(null, $params);
-                } else {
+                }elseif(sizeof($params)==1){
+                	$method=array_pop($params);
+                	$this->_curMethod = 'get'.ucfirst($method);
+                	$this->_method($id, $params);
+            	} else {
                     $this->_curMethod = 'getOne';
                     $this->_method($id, $params);
                 }
